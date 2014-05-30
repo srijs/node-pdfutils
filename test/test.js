@@ -7,9 +7,9 @@ var simpleTextPath = __dirname + "/simpleText.pdf"
 
 describe('PDF Utils', function(){
 	it('should be a function', function(){
-		pdfutils.should.be.a('function');
+		pdfutils.should.be.a.Function;
 		pdfutils.pdfutils.should.equal(pdfutils);
-		pdfutils.PDFDocument.should.be.a('function');
+		pdfutils.PDFDocument.should.be.a.Function;
 	});
 	it('should create PDFDocument', function() {
 		pdfutils().should.be.instanceof(PDFDocument);
@@ -52,11 +52,11 @@ describe('PDFDocument', function(){
 	it('#creationDate', function() {
 		var doc = new PDFDocument(simpleTextPath);
 		doc.should.have.property("creationDate");
-		doc.creationDate.should.be.a('number');
+		doc.creationDate.should.be.a.Number;
 	});
 	it('#push', function() {
 		var doc = new PDFDocument(simpleTextPath);
-		doc.push.should.be.a('function');
+		doc.push.should.be.a.Function;
 		doc.push(doc[0]);
 		assert.equal(2, doc.length);
 	});

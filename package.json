@@ -7,11 +7,18 @@
     "test": "make test"
   },
   "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-clean": "^0.5.0",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-uglify": "^0.4.0",
+    "grunt-jsdoc": "^0.5.4",
+    "grunt-mocha-test": "^0.10.2",
+    "grunt-node-gyp": "^0.3.0",
     "mocha": "*",
     "should": "*"
   },
   "repository": "",
   "author": "",
-  "license": "MIT",
-   "scripts": { "test" : "make test" }
+  "license": "MIT"
 }
