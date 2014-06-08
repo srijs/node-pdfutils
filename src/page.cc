@@ -40,6 +40,11 @@ void Page::Init(Handle<Object> target) {
 			static_cast<v8::PropertyAttribute>(ReadOnly | DontEnum)
 			);
 
+	prt->SetAccessor(String::NewSymbol("text"), Page::GetText, 0 /* setter */, Handle<Value>(), 
+			static_cast<v8::AccessControl>(DEFAULT),
+			static_cast<v8::PropertyAttribute>(ReadOnly | DontEnum)
+			);
+
 	prt->SetAccessor(String::NewSymbol("textAttributes"), Page::GetTextAttributes, 0 /* setter */, Handle<Value>(), 
 			static_cast<v8::AccessControl>(DEFAULT),
 			static_cast<v8::PropertyAttribute>(ReadOnly | DontEnum)
@@ -105,6 +110,17 @@ Handle<Value> Page::GetLinks(Local<String> property, const AccessorInfo &info) {
 	self->links = Persistent<Array>::New(links);
 
 	return scope.Close(self->links);
+}
+
+Handle<Value> Page::GetText(Local<String> property, const AccessorInfo &info) {
+	HandleScope scope;
+	Page *self = ObjectWrap::Unwrap<Page>(info.This());
+
+	char *ctext = poppler_page_get_text(self->pg);
+
+	Local<String> text = String::New(ctext);
+
+	return scope.Close(text);
 }
 
 Handle<Value> Page::GetTextAttributes(Local<String> property, const AccessorInfo &info) {
