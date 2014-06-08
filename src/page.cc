@@ -45,6 +45,11 @@ void Page::Init(Handle<Object> target) {
 			static_cast<v8::PropertyAttribute>(ReadOnly | DontEnum)
 			);
 
+	prt->SetAccessor(String::NewSymbol("textLayout"), Page::GetTextLayout, 0 /* setter */, Handle<Value>(), 
+			static_cast<v8::AccessControl>(DEFAULT),
+			static_cast<v8::PropertyAttribute>(ReadOnly | DontEnum)
+			);
+
 	prt->SetAccessor(String::NewSymbol("textAttributes"), Page::GetTextAttributes, 0 /* setter */, Handle<Value>(), 
 			static_cast<v8::AccessControl>(DEFAULT),
 			static_cast<v8::PropertyAttribute>(ReadOnly | DontEnum)
@@ -122,6 +127,35 @@ Handle<Value> Page::GetText(Local<String> property, const AccessorInfo &info) {
 
 	return scope.Close(text);
 }
+
+
+Handle<Value> Page::GetTextLayout(Local<String> property, const AccessorInfo &info) {
+	HandleScope scope;
+	Page* self = ObjectWrap::Unwrap<Page>(info.This());
+
+	PopplerRectangle *grects;
+	guint i, length;
+	gboolean containsText = poppler_page_get_text_layout(self->pg, &grects, &length);
+
+	if (!containsText) {
+		return scope.Close(Array::New(0));
+	}
+
+	Local<Array> rects = Array::New(length);
+
+	for (i = 0; i < length; i++) {
+		PopplerRectangle *grect = &grects[i];
+		Local<Object> rect = Object::New();
+		rect->Set(String::NewSymbol("x1"), Local<Number>::New(Number::New(grect->x1)));
+		rect->Set(String::NewSymbol("y1"), Local<Number>::New(Number::New(grect->y1)));
+		rect->Set(String::NewSymbol("x2"), Local<Number>::New(Number::New(grect->x2)));
+		rect->Set(String::NewSymbol("y2"), Local<Number>::New(Number::New(grect->y2)));
+		rects->Set(i, rect);
+	}
+
+	return scope.Close(rects);
+}
+
 
 Handle<Value> Page::GetTextAttributes(Local<String> property, const AccessorInfo &info) {
 	HandleScope scope;
